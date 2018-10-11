@@ -7,18 +7,6 @@
 
 {% include message_box.html type="note" title="Bitriseアカウントを持っていますか?" content=" [bitrise.io](https://www.bitrise.io)にサインアップし、bitriseアカウントにアクセス出来ることを確認してください。BitriseアカウントをGitホスティングサービスのアカウントと紐付けるには[4通りの方法](https://devcenter.bitrise.io/getting-started/index#signing-up-to-bitrise)があります。 "%}
 
-    1. Log into [bitrise.io](https://www.bitrise.io/).
-    2. On your Dashboard, click `+ Add new app`.
-    3. On `Create new App` page, choose the account your wish to add the app to.
-    4. Set the privacy of the app to either Private or [Public](/getting-started/adding-a-new-app/public-apps) and click `Next`.
-    5. Select the Git hosting service that hosts your repository, then find and select your own repository that hosts the project. Read more about [connecting your repository](/getting-started/adding-a-new-app/connecting-a-repository/).
-    6. When prompted to set up repository access, click `No, auto-add SSH key`. Read more about [SSH keys](/getting-started/adding-a-new-app/setting-up-ssh-keys/).
-    7. Type the name of the branch that includes your project's configuration - master, for example, - then click `Next`.
-    8. Wait while Bitrise is validating your project. We look for your configuration files and set up your app based on them.
-    * Bitrise Scanner selects the module of your project by default.  If there are more modules to choose from in the `Module` list, select a module that works best for your project.
-    * Select a variant for **building** (you can `Select All Variants` which will generate all variants in `APPS & ARTIFACTS`) and select a variant for **testing** too.
-    9. Register a webhook when prompted so that Bitrise can start a build automatically when code is pushed to your repository. This also kicks off your first build on the primary workflow - click the message and it will take you to the build page. The first build does not generate an apk yet, however, you can already check out the project's logs on the Build's page.
-
 1. [bitrise.io](https://www.bitrise.io/)にログインします。
 2. ダッシュボードで、 `+ Add new app` をクリックします。
 3. `Create new App` ページで, アプリを追加するアカウントを選択します。
@@ -60,13 +48,6 @@ An example of an **Android プライマリーワークフロー** の例:
 このワークフローでは、プロジェクトをビルドする `Android Build` ステップがありませんし、 `Sign APK` ステップもなく、コードレベルでプロジェクトをテストする出発点でしかありません。
 
 次に、 **Android デプロイワークフロー** がどの様になるのか見て行きましょう。
-
-    1. Select the `deploy` workflow in Workflow Editor.
-    2. Go to the `Code Signing` tab of your Workflow Editor.
-    3. Drag-and-drop your keystore file to the `ANDROID KEYSTORE FILE` field.
-    4. Fill out the `Keystore password`, `Keystore alias`, and `Private key password` fields and `Save metadata`. You should have these already at hand as these are included in your keystore file which is generated in Android Studio prior to uploading your app to Bitrise. More information on the keystore file [here](https://developer.android.com/studio/publish/app-signing). With this information added to your Code Signing tab, our `Sign APK step` (by default included in your Android deploy workflow) will take care of signing your apk so that it's ready for distribution! Head over to our [Android code signing guide](/code-signing/android-code-signing/android-code-signing-procedures/) to learn more about your code signing options!
-    5. Go back to your Build's page and click `Start/Schedule a build`.
-    6. Select `deploy` in the Basic tab of `Build configuration` pop-up window.
 
 1. ワークフローエディターで `deploy` ワークフローを選択します。
 2.  `Code Signing` タブを開きます。
@@ -129,7 +110,6 @@ keystore ファイルに関するより詳しい情報は [こちら](https://de
 
 前述したAndroidワークフローにある通り、 `Android Lint` および `Android Unit Test` ステップはデフォルトでワークフローに含まれています。
 
-    For UI testing, add our `beta Virtual Device Testing for Android` step to **run Android UI tests on virtual devices**. Available test types - make sure you select one!
 UIテスティングをするには、**Android UIテストをバーチャルデバイス上で実行する** ために、 `[BETA]Virtual Device Testing for Android` ステップを追加します。テストタイプを以下から選択してください。
 
 * instrumentation
@@ -149,28 +129,12 @@ instrumentationを選択した場合、 **Instrumentation Test** グループ�
 
 生成されたapkはビルドURLで、チームメンバーにシェア出来ます。apkのビルドが成功したことをグループや個々のユーザーに通知も出来ます。
 
-    1. Go to the `Deploy to bitrise.io` step.
-    2. In the `Notify: User Roles`, add the role so that only those get notified who have been granted with this role. Or fill out the `Notify: Emails` field with email addresses of the users you want to notify. Make sure you set those email addresses as [secret env vars](/builds/env-vars-secret-env-vars/)! These details can be also modified under `Notifications` if you click the `eye` icon next to your generated apk in the `APPS & ARTIFACTS` tab.
-
 1. `Deploy to bitrise.io` ステップを開きます。
 2. `Notify: User Roles`　で、ロール(role)を設定し、このロールが割り当てられたユーザーにのみ通知が行くようにします。もしくは、 `Notify: Emails` フィールドに通知したいユーザーのemailアドレスを追加してください。これらのemailアドレスは [secret env vars](/builds/env-vars-secret-env-vars/) で設定してください。 設定の詳細は、ビルド結果画面の `APPS & ARTIFACTS` タブで表示されるapkの横にある `目` のアイコンをクリックして開いた画面の `Notifications` の下でも編集できます。
 
 ### マーケットプレイスにデプロイする
 
 ワークフローに `Google Play Deploy` ステップを（ `Sign APK` ステップのあとに）追加すると、 署名済みapkがマーケットプレイスにアップロードされます。
-
-    1. Make sure you are in sync with Google Play Store! Learn how to
-    * [register to Google Play Store and set up your project](/tutorials/deploy/android-deployment/#register-to-google-play-store-and-set-up-your-first-project)
-    * set up [Google Play API access](/tutorials/deploy/android-deployment/#set-up-google-play-api-access)
-    2. In your Bitrise `Dashboard`, go to `Code Signing` and upload the service account JSON key into the `GENERIC FILE STORAGE.`
-    3. Copy the env key which stores your uploaded file’s url.
-
-    For example: `BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL`
-    4. Go back to the `Google Play Deploy` step in your Workflow Editor.\`
-    5. Fill out the required input fields as follows:
-    * `Service Account JSON key file path`:  This field can accept a remote URL so you have to provide the environment variable which contains your uploaded service account JSON key. For example: `$BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL`
-    * `Package name`: the package name of your Android app
-    * `Track`: the track where you want to deploy your APK (alpha/beta/rollout/production)
 
 1. Google Play Storeが設定済みであることを確認してください。詳しくはこちらを参照してください。
    * [register to Google Play Store and set up your project](/tutorials/deploy/android-deployment/#register-to-google-play-store-and-set-up-your-first-project)
